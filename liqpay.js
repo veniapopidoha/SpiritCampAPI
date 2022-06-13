@@ -30,7 +30,7 @@ const crypto = require('crypto');
  *
  * @param {string} public_key
  * @param {string} private_key
- *
+ * 
  * @throws {InvalidArgumentException}
  */
 module.exports = function LiqPay(public_key, private_key) {
@@ -71,7 +71,7 @@ module.exports = function LiqPay(public_key, private_key) {
    * @param {object} params
    *
    * @return {string}
-   *
+   * 
    * @throws {InvalidArgumentException}
    */
   this.cnb_form = function cnb_form(params) {
@@ -98,7 +98,7 @@ module.exports = function LiqPay(public_key, private_key) {
    * @param {object} params
    *
    * @return {string}
-   *
+   * 
    * @throws {InvalidArgumentException}
    */
   this.cnb_signature = function cnb_signature(params) {
@@ -113,7 +113,7 @@ module.exports = function LiqPay(public_key, private_key) {
    * @param {object} params
    *
    * @return {object} params
-   *
+   * 
    * @throws {InvalidArgumentException}
    */
   this.cnb_params = function cnb_params(params) {

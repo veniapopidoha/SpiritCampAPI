@@ -3,6 +3,7 @@ const router = express.Router();
 const Post = require('./Post.js');
 
 var LiqPay = require('./liqpay.js');
+var liqpay = new LiqPay('sandbox_i7113317942', 'sandbox_PJWkYmAbiaUeS0oMAZJzumjlPifRWcWzC1A70N2e');
 
 router.get('/', async (req, res) => {
     const databaseResult = await Post.find({});
@@ -15,10 +16,10 @@ router.post('/', async (req, res) => {
 })
 
 router.post('/paid', async (req, res) => {
-    var sign = LiqPay.str_to_sign(
-        'sandbox_PJWkYmAbiaUeS0oMAZJzumjlPifRWcWzC1A70N2e' +
+    var sign = liqpay.str_to_sign(
+        'sandbox_i7113317942' +
         req.data +
-        'sandbox_i7113317942'
+        'sandbox_PJWkYmAbiaUeS0oMAZJzumjlPifRWcWzC1A70N2e'
     );
     console.log('Signature from server - ', req.body.signature);
     console.log('Recovered - ', sign);
