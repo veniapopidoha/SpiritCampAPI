@@ -9,6 +9,6 @@ app.use(express.json());
 
 app.use(router)
 
-app.listen(8080, () => {
-    console.log(`Server Started at ${8080}`)
+app.listen(3000, () => {
+    console.log(`Server Started at ${3000}`)
 })
