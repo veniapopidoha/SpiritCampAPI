@@ -48,7 +48,7 @@ router.post('/beginPay', async ({ body }, res) => {
     });
 });
 
-router.post('/paidhook', async (req, res) => {
+router.post('/paid', async (req, res) => {
     const decoded = Buffer.from(req.body.data, 'base64').toString('utf8')  
     var sign = liqpay.str_to_sign(
         privateKey +
