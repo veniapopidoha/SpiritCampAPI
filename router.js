@@ -49,7 +49,8 @@ router.post('/beginPay', async ({ body }, res) => {
 });
 
 router.post('/paid', async (req, res) => {
-    const decoded = Buffer.from(req.body.data, 'base64').toString('utf8')  
+    const decoded = Buffer.from(req.body.data, 'base64').toString('utf8');
+    console.log('decoded - , ', decoded)  
     var sign = liqpay.str_to_sign(
         privateKey +
         decoded +
