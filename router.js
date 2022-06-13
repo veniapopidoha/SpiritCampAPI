@@ -53,7 +53,7 @@ router.post('/paid', async (req, res) => {
     console.log('decoded - , ', decoded)  
     var sign = liqpay.str_to_sign(
         privateKey +
-        decoded +
+        req.body.data +
         privateKey
     );
     console.log('DATA', req.body.data);
