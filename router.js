@@ -22,7 +22,13 @@ router.post('/', async (req, res) => {
 })
 
 router.post('/paid', async (req, res) => {
-    console.log('Paid info paramsss - ', req.headers);
+    var sign = liqpay.str_to_sign(
+        'sandbox_PJWkYmAbiaUeS0oMAZJzumjlPifRWcWzC1A70N2e' +
+        data +
+        'sandbox_i7113317942'
+    );
+    console.log('Signature from server - ', req.body.signature);
+    console.log('Recovered - ', sign);
     console.log('Paid info body - ', base64_decode(req.body.data));
     res.status(200).json({ ok: true });
 });
