@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Post = require('./Post.js');
 
-var LiqPay = require('liqpay');
+var LiqPay = require('./liqpay.js');
 
 router.get('/', async (req, res) => {
     const databaseResult = await Post.find({});
