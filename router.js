@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const Post = require('../SpiritCampAPI/Post.js')
+const Post = require('./Post.js')
 
 router.get('/', async (req, res) => {
     const databaseResult = await Post.find({});
