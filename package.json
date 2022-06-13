@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "showversion": "node --version",
     "start": "node index.js"
   },
   "engines": {

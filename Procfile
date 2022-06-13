@@ -1,1 +1,2 @@
-web: bundle exec thin start -p $PORT
+version: npm run showversion
+web: npm run start
