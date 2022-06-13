@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
 })
 
 router.post('/paid', async (req, res) => {
-    console.log('Paid info params - ', req.params);
+    console.log('Paid info params - ', req);
     res.status(200).json(req.body);
 });
 
