@@ -4,13 +4,6 @@ const Post = require('./Post.js');
 
 var LiqPay = require('liqpay');
 
-var liqpay = new LiqPay(public_key, private_key);
-var sign = liqpay.str_to_sign(
-'sandbox_PJWkYmAbiaUeS0oMAZJzumjlPifRWcWzC1A70N2e' +
-data +
-'sandbox_i7113317942'
-);
-
 router.get('/', async (req, res) => {
     const databaseResult = await Post.find({});
     res.status(200).json(databaseResult); 
