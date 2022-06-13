@@ -55,7 +55,8 @@ router.post('/paid', async (req, res) => {
         privateKey
     );
     if (req.body.signature === sign) {
-      res.status(200).json({ ok: true, sign });
+        await new Promise((resolve) => setTimeout(() => resolve(true), 4000));
+        res.status(200).json({ ok: true, sign });
     } else {
       res.status(300);
     }
