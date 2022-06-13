@@ -6,10 +6,11 @@ const crypto = require('crypto');
 const Payment = require('./payments.js');
 
 
-privateKey = 'sandbox_PJWkYmAbiaUeS0oMAZJzumjlPifRWcWzC1A70N2e';
-publicKey = 'sandbox_i7113317942';
+const privateKey = 'sandbox_PJWkYmAbiaUeS0oMAZJzumjlPifRWcWzC1A70N2e';
+const publicKey = 'sandbox_i7113317942';
 
 var LiqPay = require('./liqpay.js');
+const { base } = require('./User.js');
 var liqpay = new LiqPay(publicKey, privateKey);
 
 router.get('/', async (req, res) => {
@@ -24,9 +25,11 @@ router.post('/', async (req, res) => {
 
 
 router.post('/beginPay', async ({ body }, res) => {
-    const buff = Buffer.from(JSON.stringify({...body, publicKey }), 'utf-8');
+    console.log('body - ', body);
+    const data = JSON.stringify({...body, public_key: publicKey });
+    const buff = Buffer.from(data, 'utf-8');
     const base64 = buff.toString('base64');
-    const signString = privateKey + body + privateKey;
+    const signString = privateKey + base64 + privateKey;
     const sha1 = crypto.createHash('sha1')
     sha1.update(signString)
     const signature = sha1.digest('base64');
@@ -36,16 +39,13 @@ router.post('/beginPay', async ({ body }, res) => {
     //     userId: body.userId,
     //     paid: false,
     //     signature: signature,
-    //     publicKey: publicKey,
     // })
     res.status(200).json({
-            data: base64,
-            signature: signature,
-            userId: body.userId,
-            paid: false,
-            signature: signature,
-            publicKey: publicKey,
-        });
+        data: base64,
+        userId: body.userId,
+        paid: false,
+        signature: signature,
+    });
 });
 
 router.post('/paidhook', async (req, res) => {
@@ -55,7 +55,7 @@ router.post('/paidhook', async (req, res) => {
         'eyJwdWJsaWNfa2V5Ijoic2FuZGJveF9pNzExMzMxNzk0MiIsInZlcnNpb24iOiIzIiwiYWN0aW9uIjoicGF5IiwiYW1vdW50IjoiMTAwMDAwMCIsImN1cnJlbmN5IjoiVVNEIiwiZGVzY3JpcHRpb24iOiJUZXJtaW5vdmEgZG9wb21vZ2EgbmEgVmlsbHUgdiBJdGFsaWkiLCJvcmRlcl9pZCI6IlRlc3RQYXltZW50SWQ0NzUxNTQzMDkiLCJyZXN1bHRfdXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwic2VydmVyX3VybCI6Imh0dHBzOi8vc3BpcmktY2FtcC11c2VyLXJlZ2lzdHJhdGlvbi5oZXJva3VhcHAuY29tL3BhaWQiLCJwcm9kdWN0X2Rlc2NyaXB0aW9uIjoiVGVybWlub3ZhIGRvcG9tb2dhIG5hIFZpbGx1IHYgSXRhbGlpIn0=' +
         privateKey
     );
-    res.status(200).json({ ok: true });
+    res.status(200).json({ ok: true, sign });
 });
 
 router.delete('/:id', async ({ params }, res) => {
