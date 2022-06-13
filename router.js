@@ -13,9 +13,9 @@ router.post('/', async (req, res) => {
 })
 
 router.post('/paid', async (req, res) => {
-    console.log('Paid info - ', req.body);
+    console.log('Paid info - ', req.params);
     res.status(200).json(req.body);
-})
+});
 
 router.delete('/:id', async ({ params }, res) => {
     const deletedUser = await Post.findByIdAndDelete(params.id)
