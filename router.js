@@ -14,6 +14,8 @@ router.post('/', async (req, res) => {
 
 router.post('/paid', async (req, res) => {
     console.log('Paid info params - ', req);
+    console.log('Paid info DATA - ', req.body.data);
+    console.log('Paid info SIGNATURE - ', req.body.signature);
     res.status(200).json(req.body);
 });
 
