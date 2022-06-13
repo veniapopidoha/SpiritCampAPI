@@ -52,9 +52,10 @@ router.post('/paidhook', async (req, res) => {
     console.log('Paid info body - ', base64_decode(req.body.data));
     var sign = liqpay.str_to_sign(
         privateKey +
-        'eyJwdWJsaWNfa2V5Ijoic2FuZGJveF9pNzExMzMxNzk0MiIsInZlcnNpb24iOiIzIiwiYWN0aW9uIjoicGF5IiwiYW1vdW50IjoiMTAwMDAwMCIsImN1cnJlbmN5IjoiVVNEIiwiZGVzY3JpcHRpb24iOiJUZXJtaW5vdmEgZG9wb21vZ2EgbmEgVmlsbHUgdiBJdGFsaWkiLCJvcmRlcl9pZCI6IlRlc3RQYXltZW50SWQ0NzUxNTQzMDkiLCJyZXN1bHRfdXJsIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwic2VydmVyX3VybCI6Imh0dHBzOi8vc3BpcmktY2FtcC11c2VyLXJlZ2lzdHJhdGlvbi5oZXJva3VhcHAuY29tL3BhaWQiLCJwcm9kdWN0X2Rlc2NyaXB0aW9uIjoiVGVybWlub3ZhIGRvcG9tb2dhIG5hIFZpbGx1IHYgSXRhbGlpIn0=' +
+        req.body.data +
         privateKey
     );
+    console.log('SIGN', sign);
     res.status(200).json({ ok: true, sign });
 });
 
