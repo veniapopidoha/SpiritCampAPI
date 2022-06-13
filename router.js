@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 router.post('/paid', async (req, res) => {
     var sign = LiqPay.str_to_sign(
         'sandbox_PJWkYmAbiaUeS0oMAZJzumjlPifRWcWzC1A70N2e' +
-        data +
+        req.data +
         'sandbox_i7113317942'
     );
     console.log('Signature from server - ', req.body.signature);
