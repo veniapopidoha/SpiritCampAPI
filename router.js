@@ -54,6 +54,8 @@ router.post('/paidhook', async (req, res) => {
         req.body.data +
         privateKey
     );
+    console.log('DATA', req.body.data);
+    console.log('HOOK DATA SIGNATURE', req.body.signature);
     console.log('SIGN', sign);
     res.status(200).json({ ok: true, sign });
 });
