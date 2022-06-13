@@ -10,7 +10,6 @@ const privateKey = 'sandbox_PJWkYmAbiaUeS0oMAZJzumjlPifRWcWzC1A70N2e';
 const publicKey = 'sandbox_i7113317942';
 
 var LiqPay = require('./liqpay.js');
-const { base } = require('./User.js');
 var liqpay = new LiqPay(publicKey, privateKey);
 
 router.get('/', async (req, res) => {
@@ -30,15 +29,14 @@ router.post('/beginPay', async ({ body }, res) => {
     const buff = Buffer.from(data, 'utf-8');
     const base64 = buff.toString('base64');
     const signString = privateKey + base64 + privateKey;
+
     const sha1 = crypto.createHash('sha1')
     sha1.update(signString)
     const signature = sha1.digest('base64');
     // const createdPayment = await Payment.create({
-    //     data: base64,
-    //     signature: signature,
+    //     data: data,
     //     userId: body.userId,
     //     paid: false,
-    //     signature: signature,
     // })
     res.status(200).json({
         data: base64,
@@ -50,16 +48,17 @@ router.post('/beginPay', async ({ body }, res) => {
 
 router.post('/paid', async (req, res) => {
     const decoded = Buffer.from(req.body.data, 'base64').toString('utf8');
-    console.log('decoded - , ', decoded)  
+    console.log('decoded Data - , ', decoded)
     var sign = liqpay.str_to_sign(
         privateKey +
         req.body.data +
         privateKey
     );
-    console.log('DATA', req.body.data);
-    console.log('HOOK DATA SIGNATURE', req.body.signature);
-    console.log('SIGN', sign);
-    res.status(200).json({ ok: true, sign });
+    if (req.body.signature === sign) {
+      res.status(200).json({ ok: true, sign });
+    } else {
+      res.status(300);
+    }
 });
 
 router.delete('/:id', async ({ params }, res) => {
