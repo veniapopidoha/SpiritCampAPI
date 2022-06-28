@@ -44,7 +44,7 @@ const UserSchema = mongoose.Schema ({
     submit: {
         type: String,
         required: false
-    },
+    }
 })
 
 module.exports = mongoose.model('UserSchema', UserSchema)
