@@ -44,10 +44,6 @@ const UserSchema = mongoose.Schema ({
     submit: {
         type: String,
         required: false
-    },
-    ident: {
-        type: Number,
-        required: true
     }
 })
 
