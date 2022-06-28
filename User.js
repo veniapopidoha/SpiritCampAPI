@@ -45,6 +45,10 @@ const UserSchema = mongoose.Schema ({
         type: String,
         required: false
     },
+    ident: {
+        type: Number,
+        required: true
+    }
 })
 
 module.exports = mongoose.model('UserSchema', UserSchema)

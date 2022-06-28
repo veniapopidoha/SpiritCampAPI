@@ -19,6 +19,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const createdUser = await User.create(req.body)
+    User.ident = 12345;
     res.status(200).json(createdUser);
 })
 
