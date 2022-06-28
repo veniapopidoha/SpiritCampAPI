@@ -3,7 +3,28 @@ const router = express.Router();
 const User = require('./User.js');
 const crypto = require('crypto');
 
-const Payment = require('./payments.js');
+function preparePeymentData(userId, userName) {
+    const payData = {
+        action: "pay",
+        amount: "1500",
+        currency: "UAH",
+        description: "Oplata za Spirit Camp 2022 Lito - " + userName,
+        order_id: userId,
+        product_description: "Avans",
+        result_url: "http://localhost:3000/paid",
+        server_url: "https://spiri-camp-user-registration.herokuapp.com/paid",
+        version: "3",
+    }
+    const data = JSON.stringify({...payData, public_key: publicKey });
+    const buff = Buffer.from(data, 'utf-8');
+    const base64 = buff.toString('base64');
+    const signString = privateKey + base64 + privateKey;
+
+    const sha1 = crypto.createHash('sha1')
+    sha1.update(signString)
+    const signature = sha1.digest('base64');
+    return { signature, paymentDataBase64: base64 };
+}
 
 
 const privateKey = 'sandbox_PJWkYmAbiaUeS0oMAZJzumjlPifRWcWzC1A70N2e';
@@ -18,35 +39,23 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    const createdUser = await User.create(req.body)
-    res.status(200).json(createdUser);
+    const createdUser = await User.create({ ...req.body, paid: false })
+    //!!!! paid=false на стороні бека тому що можна хакнути і зробити собі оплачено незаплативши
+    const payData = preparePeymentData(
+        createdUser._id,
+        `${createdUser.name} ${createdUser.surname} ${createdUser.fatherName}`
+    );
+    const userId = createdUser.id;
+    delete createdUser.id;
+    const userWithPaymentData = await User.findByIdAndUpdate(userId, {
+        ...createdUser,
+        paymentDataBase64: payData.paymentDataBase64,
+        signature: payData.signature,
+    })
+    res.status(200).json(userWithPaymentData);
 })
 
-
-router.post('/beginPay', async ({ body }, res) => {
-    console.log('body - ', body);
-    const data = JSON.stringify({...body, public_key: publicKey });
-    const buff = Buffer.from(data, 'utf-8');
-    const base64 = buff.toString('base64');
-    const signString = privateKey + base64 + privateKey;
-
-    const sha1 = crypto.createHash('sha1')
-    sha1.update(signString)
-    const signature = sha1.digest('base64');
-    // const createdPayment = await Payment.create({
-    //     data: data,
-    //     userId: body.userId,
-    //     paid: false,
-    // })
-    res.status(200).json({
-        data: base64,
-        userId: body.userId,
-        paid: false,
-        signature: signature,
-    });
-});
-
-router.post('/paid', async (req, res) => {
+router.post('/paid', async (req, res) => { // метод для приватбанка
     const decoded = Buffer.from(req.body.data, 'base64').toString('utf8');
     console.log('decoded Data - , ', decoded)
     var sign = liqpay.str_to_sign(
@@ -54,6 +63,9 @@ router.post('/paid', async (req, res) => {
         req.body.data +
         privateKey
     );
+    // тут записати юзерові в профайл що він оплатив
+    // надіслати емаіл про успішну оплату
+    await User.findByIdAndUpdate(decoded.order_id, { paid: true });
     if (req.body.signature === sign) {
         res.status(200).json({ ok: true, sign });
     } else {
