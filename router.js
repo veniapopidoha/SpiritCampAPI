@@ -67,11 +67,12 @@ router.post('/paid', async (req, res) => {
     // тут записати юзерові в профайл що він оплатив
     // надіслати емаіл про успішну оплату
     await User.findByIdAndUpdate(decoded.order_id, { paid: true });
-    if (req.body.signature === sign) {
-        res.status(200).json({ ok: true, sign });
-    } else {
-      res.status(300);
-    }
+    res.status(300);
+    // if (req.body.signature === sign) {
+    //     res.status(200).json({ ok: true, sign });
+    // } else {
+    //   res.status(300);
+    // }
 });
 
 router.post('/result', (req, res) => {
