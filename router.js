@@ -63,7 +63,9 @@ router.post('/paid', async (req, res) => {
         privateKey
     );
     console.log('Paid method workds - ', decoded);
-    await User.findByIdAndUpdate(decoded.order_id, { paid: true });
+    const user = await User.findById(decoded.order_id);
+    console.log('user - ', user);
+    await User.findByIdAndUpdate(decoded.order_id, { ...user, paid: true });
     if (req.body.signature === sign) {
         res.status(200).json({ ok: true, sign });
     } else {
