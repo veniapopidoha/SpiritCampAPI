@@ -11,7 +11,7 @@ function preparePeymentData(userId, userName) {
         description: "Oplata za Spirit Camp 2022 Lito - " + userName,
         order_id: userId,
         product_description: "Avans",
-        result_url: "http://localhost:3000/paid",
+        redirect_url: "https://spiri-camp-user-registration.herokuapp.com/result",
         server_url: "https://spiri-camp-user-registration.herokuapp.com/paid",
         version: "3",
     }
@@ -40,22 +40,23 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const createdUser = await User.create({ ...req.body, paid: false })
-    //!!!! paid=false на стороні бека тому що можна хакнути і зробити собі оплачено незаплативши
     const payData = preparePeymentData(
         createdUser._id,
         `${createdUser.name} ${createdUser.surname} ${createdUser.fatherName}`
     );
     const userId = createdUser.id;
     delete createdUser.id;
-    const userWithPaymentData = await User.findByIdAndUpdate(userId, {
+    const userWithPaymentData = {
         ...createdUser,
         paymentDataBase64: payData.paymentDataBase64,
         signature: payData.signature,
-    })
+    };
+    await User.findByIdAndUpdate(userId, userWithPaymentData);
     res.status(200).json(userWithPaymentData);
-})
+});
 
-router.post('/paid', async (req, res) => { // метод для приватбанка
+router.post('/paid', async (req, res) => {
+    console.log('PAID METHOD - ', res.body);
     const decoded = Buffer.from(req.body.data, 'base64').toString('utf8');
     console.log('decoded Data - , ', decoded)
     var sign = liqpay.str_to_sign(
@@ -71,6 +72,11 @@ router.post('/paid', async (req, res) => { // метод для приватба
     } else {
       res.status(300);
     }
+});
+
+router.post('/result', (req, res) => {
+    console.log('Result URL - ', req.body);
+    res.redirect('http://localhost:3000/about');
 });
 
 router.delete('/:id', async ({ params }, res) => {
