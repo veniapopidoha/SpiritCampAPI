@@ -56,23 +56,18 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/paid', async (req, res) => {
-    console.log('PAID METHOD - ', res.body);
     const decoded = Buffer.from(req.body.data, 'base64').toString('utf8');
-    console.log('decoded Data - , ', decoded)
     var sign = liqpay.str_to_sign(
         privateKey +
         req.body.data +
         privateKey
     );
-    // тут записати юзерові в профайл що він оплатив
-    // надіслати емаіл про успішну оплату
-    await User.findByIdAndUpdate(decoded.order_id, { paid: true });
-    res.status(300);
-    // if (req.body.signature === sign) {
-    //     res.status(200).json({ ok: true, sign });
-    // } else {
-    //   res.status(300);
-    // }
+    await User.findByIdAndUpdate({ _id: decoded.order_id }, { paid: true });
+    if (req.body.signature === sign) {
+        res.status(200).json({ ok: true, sign });
+    } else {
+      res.status(300).json({ ok: false });
+    }
 });
 
 router.post('/result', (req, res) => {
