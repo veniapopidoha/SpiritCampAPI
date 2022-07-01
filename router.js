@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
         paymentDataBase64: payData.paymentDataBase64,
         signature: payData.signature,
     };
-    await User.findByIdAndUpdate({ _id: userId }, userWithPaymentData);
+    await User.findByIdAndUpdate(userId, userWithPaymentData);
     res.status(200).json(userWithPaymentData);
 });
 
@@ -62,7 +62,8 @@ router.post('/paid', async (req, res) => {
         req.body.data +
         privateKey
     );
-    await User.findByIdAndUpdate({ _id: decoded.order_id }, { paid: true });
+    console.log('Paid method workds - ', decoded);
+    await User.findByIdAndUpdate(decoded.order_id, { paid: true });
     if (req.body.signature === sign) {
         res.status(200).json({ ok: true, sign });
     } else {
