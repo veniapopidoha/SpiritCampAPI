@@ -11,7 +11,7 @@ function preparePeymentData(userId, userName) {
         description: "Oplata za Spirit Camp 2022 Lito - " + userName,
         order_id: userId,
         product_description: "Avans",
-        redirect_url: "https://spiri-camp-user-registration.herokuapp.com/result",
+        result_url: "https://spiri-camp-user-registration.herokuapp.com/result",
         server_url: "https://spiri-camp-user-registration.herokuapp.com/paid",
         version: "3",
     }
