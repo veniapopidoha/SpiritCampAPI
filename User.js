@@ -44,6 +44,18 @@ const UserSchema = mongoose.Schema ({
     submit: {
         type: String,
         required: false
+    },
+    paid: {
+        type: Boolean,
+        required: false
+    },
+    paymentDataBase64: {
+        type: String,
+        required: false,
+    },
+    signature: {
+        type: String,
+        require: false,
     }
 })
 

@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
         paymentDataBase64: payData.paymentDataBase64,
         signature: payData.signature,
     };
-    await User.findByIdAndUpdate(userId, userWithPaymentData);
+    await User.findByIdAndUpdate({ _id: userId }, userWithPaymentData);
     res.status(200).json(userWithPaymentData);
 });
 
