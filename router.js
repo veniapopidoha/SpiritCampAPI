@@ -38,6 +38,12 @@ router.get('/', async (req, res) => {
     res.status(200).json(databaseResult); 
 })
 
+router.get('/:id', async (req, res) => {
+    console.log('Req params - ', req.params.id);
+    const databaseResult = await User.findById(req.params.id);
+    res.status(200).json(databaseResult); 
+})
+
 router.post('/', async (req, res) => {
     const createdUser = await User.create({ ...req.body, paid: false })
     const payData = preparePeymentData(
@@ -46,12 +52,11 @@ router.post('/', async (req, res) => {
     );
     const userId = createdUser.id;
     delete createdUser.id;
-    const userWithPaymentData = {
-        ...createdUser,
+    console.log('New Created user ID: ', userId);
+    const userWithPaymentData = await User.findByIdAndUpdate(userId, {
         paymentDataBase64: payData.paymentDataBase64,
         signature: payData.signature,
-    };
-    await User.findByIdAndUpdate(userId, userWithPaymentData);
+    }, { new: true });
     res.status(200).json(userWithPaymentData);
 });
 
@@ -63,6 +68,7 @@ router.post('/paid', async (req, res) => {
         privateKey
     );
     console.log('Paid method workds - ', decoded);
+    console.log('UserID - ', decoded.order_id);
     const user = await User.findById(decoded.order_id);
     console.log('user - ', user);
     await User.findByIdAndUpdate(decoded.order_id, { ...user, paid: true });
